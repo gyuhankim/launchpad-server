@@ -6,21 +6,38 @@ const morgan = require('morgan');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-// const {dbConnect} = require('./db-knex');
+
+const gamesRouter = require('./routes/games');
 
 const app = express();
 
+// Middleware
+// Log all requests. Skip logging in test env
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
     skip: (req, res) => process.env.NODE_ENV === 'test'
   })
 );
 
+// Enable CORS
 app.use(
   cors({
     origin: CLIENT_ORIGIN
   })
 );
+
+// Mount Routers
+app.use('/games', gamesRouter);
+
+// Error Handler
+app.use((err, req, res, next) => {
+  if (err.status) {
+    const errBody = Object.assign({}, err, { message: err.message });
+    res.status(err.status).json(errBody);
+  } else {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 function runServer(port = PORT) {
   const server = app
