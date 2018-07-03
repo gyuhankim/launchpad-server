@@ -2,27 +2,28 @@
 
 const mongoose = require('mongoose');
 const request = require('request');
+const axios = require('axios');
 
 const { DATABASE_URL } = require('../config');
 
 const Game = require('../models/game');
-const seedGames = require('../db/seed/games.json');
 
+const options = {
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Charset': 'utf-8',
+    'user-key': '5811dbfa8f2af4d23d9adcee288c794c'
+  },
+  params: {
+    fields: 'name,summary,release_dates,first_release_date,platforms,videos,screenshots,cover',
+    'filter[release_dates.date][gt]': '2018-01-01',
+    limit: 50
+  }
+};
 
-// =============== Can't figure out how to store the seedGames request JSON into MLab =============//
-// // Test API call
-// const options = {
-//   url: 'https://api-endpoint.igdb.com/games/?fields=name,summary&filter[release_dates.date][gt]=1530547688359&limit=1',
-//   method: 'GET',
-//   headers: {
-//     'Accept': 'application/json',
-//     'Accept-Charset': 'utf-8',
-//     'user-key': '5811dbfa8f2af4d23d9adcee288c794c'
-//   }
-// };
-
-// const seedGames = request(options, function(err, res, body) {
-//   return body;
+// request(options, function(err, res, body) {
+//   seedGames = JSON.parse(res.body);
+//   console.log(JSON.stringify(seedGames));
 // });
 
 console.log(`Connecting to MongoDB/MLab at ${DATABASE_URL}`);
@@ -32,9 +33,11 @@ mongoose.connect(DATABASE_URL)
     return mongoose.connection.db.dropDatabase();
   })
   .then(() => {
+    return axios.get('https://api-endpoint.igdb.com/games/', options);
+  })
+  .then(res => {
     console.log('Seeding database');
-    console.log(JSON.stringify(seedGames));
-    return Game.insertMany(seedGames);
+    return Game.insertMany(res.data);
   })
   .then(() => {
     console.log('Disconnecting');
