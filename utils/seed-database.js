@@ -1,7 +1,6 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const request = require('request');
 const axios = require('axios');
 
 const { DATABASE_URL } = require('../config');
@@ -20,11 +19,6 @@ const options = {
     limit: 50
   }
 };
-
-// request(options, function(err, res, body) {
-//   seedGames = JSON.parse(res.body);
-//   console.log(JSON.stringify(seedGames));
-// });
 
 console.log(`Connecting to MongoDB/MLab at ${DATABASE_URL}`);
 mongoose.connect(DATABASE_URL)

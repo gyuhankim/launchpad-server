@@ -3,22 +3,29 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const request = require('request');
+const passport = require('passport');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 
-const gamesRouter = require('./routes/games');
+const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt');
 
+const gamesRouter = require('./routes/games');
+const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
+const favoritesRouter = require('./routes/favorites');
+
+// Create an Express application
 const app = express();
 
-// Middleware
-// Log all requests. Skip logging in test env
-app.use(
-  morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
-    skip: (req, res) => process.env.NODE_ENV === 'test'
-  })
-);
+// ==== Middleware ==== //
+
+// Create a static webserver
+app.use(express.static('public'));
+
+// Parse request body
+app.use(express.json());
 
 // Enable CORS
 app.use(
@@ -27,8 +34,29 @@ app.use(
   })
 );
 
+// Log all requests. Skip logging in test env
+app.use(
+  morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
+    skip: (req, res) => process.env.NODE_ENV === 'test'
+  })
+);
+
+// Configure Passport to utilize localStrategy and jwtStrategy
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
 // Mount Routers
-app.use('/games', gamesRouter);
+app.use('/', gamesRouter);
+app.use('/register', usersRouter);
+app.use('/favorites', favoritesRouter);
+app.use('/login', authRouter);
+
+// Custom 404 Not Found route handler
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
 // Error Handler
 app.use((err, req, res, next) => {
