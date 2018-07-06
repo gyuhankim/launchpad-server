@@ -7,8 +7,6 @@ const Game = require('../models/game');
 
 const router = express.Router();
 
-
-
 router.get('/', (req, res, next) => {
   Game.find({
     first_release_date: {$gt: Date.now()}
