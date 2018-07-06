@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  favorites: Array
+  games: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }]
 });
 
 userSchema.set('toObject', {

@@ -15,7 +15,7 @@ const options = {
   },
   params: {
     fields: 'name,summary,release_dates,first_release_date,platforms,videos,screenshots,cover',
-    'filter[release_dates.date][gt]': '2018-01-01',
+    'filter[first_release_date][gte]': '2018-01-01',
     limit: 50
   }
 };
