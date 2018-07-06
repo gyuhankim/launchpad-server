@@ -20,4 +20,16 @@ router.get('/', (req, res, next) => {
     });
 });
 
+router.get('/:id', (req, res, next) => {
+  const gameId = req.params.id;
+
+  Game.findOne({id: gameId})
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 module.exports = router;

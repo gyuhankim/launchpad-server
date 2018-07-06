@@ -22,7 +22,7 @@ const getAllTheGames = new CronJob({
     console.log(`Connecting to MongoDB/MLab at ${DATABASE_URL}`);
     mongoose.connect(DATABASE_URL)
       .then(() => {
-        return axios.get('https://api-endpoint.igdb.com/games/scroll/DXF1ZXJ5QW5kRmV0Y2gBAAAAAAANydAWdmxvcm9NbVFTX0NzZzhyZFNUNVVQQQ==/?fields=name,summary,cover,release_dates,first_release_date,platforms,videos,screenshots', options);
+        return axios.get('https://api-endpoint.igdb.com/games/scroll/DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAODFoWdmxvcm9NbVFTX0NzZzhyZFNUNVVQQQ==/?fields=name,summary,release_dates,first_release_date,platforms,videos,screenshots,cover', options);
       })
       .then(res => {
         console.log('Seeding database');
