@@ -91,7 +91,7 @@ router.post('/', (req, res, next) => {
   return User.hashPassword(password)
     .then(digest => {
       const newUser = {
-        username,
+        username: username.toLowerCase(),
         password: digest,
         firstName,
         lastName
