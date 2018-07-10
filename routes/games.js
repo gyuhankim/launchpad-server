@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const Game = require('../models/game');
+const User = require('../models/user');
 
 const router = express.Router();
 

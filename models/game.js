@@ -31,10 +31,7 @@ const gameSchema = new mongoose.Schema({
 
 gameSchema.set('toObject', {
   virtuals: true,
-  versionKey: false,
-  transform: (doc, ret) => {
-    delete ret._id;
-  }
+  versionKey: false
 });
 
 module.exports = mongoose.model('Game', gameSchema);

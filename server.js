@@ -46,7 +46,7 @@ passport.use(localStrategy);
 passport.use(jwtStrategy);
 
 // Mount Routers
-app.use('/', gamesRouter);
+app.use('/games', gamesRouter);
 app.use('/register', usersRouter);
 app.use('/favorites', favoritesRouter);
 app.use('/login', authRouter);
@@ -64,7 +64,7 @@ app.use((err, req, res, next) => {
     const errBody = Object.assign({}, err, { message: err.message });
     res.status(err.status).json(errBody);
   } else {
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: err.message });
   }
 });
 
