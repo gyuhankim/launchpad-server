@@ -22,14 +22,9 @@ router.get('/', (req, res, next) => {
     });
 });
 
-// Add a game to user's favorites list
-
-// async fetch to get all the current ones
-// async post to add a new one
-
 router.post('/', (req, res, next) => {
   
-  const gameId = req.body.gameId; // needs an action with fetch/post
+  const { gameId } = req.body; 
   const userId = req.user.id;
 
   User.findOneAndUpdate({ _id: userId }, { $addToSet: { games: gameId } }, { new: true })
@@ -39,6 +34,21 @@ router.post('/', (req, res, next) => {
     .catch(err => {
       next(err);
     });
+});
+
+router.delete('/', (req, res, next) => {
+
+  const { gameId } = req.body;
+  const userId = req.user.id;
+
+  User.findOneAndUpdate({ _id: userId }, { $pull: { games: gameId} }, { new: true })
+    .then(result => {
+      res.json(result).status(204);
+    })
+    .catch(err => {
+      next(err);
+    });
+    
 });
 
 module.exports = router;

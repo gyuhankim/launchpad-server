@@ -13,7 +13,6 @@ router.get('/', (req, res, next) => {
     first_release_date: {$gt: Date.now()}
   })
     .sort({first_release_date: 1})
-    .limit(50)
     .then(results => {
       res.json(results);
     })
