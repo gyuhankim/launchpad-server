@@ -16,8 +16,8 @@ router.get('/', (req, res, next) => {
     first_release_date: {$gt: Date.now()}
   })
     .sort({first_release_date: 1})
-    .skip(36 * (page - 1))
-    .limit(36)
+    .skip(24 * (page - 1))
+    .limit(24)
     .then(results => {
       res.json(results);
     })
