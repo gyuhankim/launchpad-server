@@ -8,7 +8,7 @@ const User = require('../models/user');
 
 const router = express.Router();
 
-// Get initial 50 games
+// Get initial 24 games
 router.get('/', (req, res, next) => {
   const page = req.headers.pagenum;
 
