@@ -31,7 +31,7 @@ This is the server documentation for [LaunchPad.gg](https://mysterious-sands-196
 * [IGDB API](https://igdb.github.io/api/)
 
 ## Database
-LaunchPad.gg uses MongoDB / Mongoose for persistence of data. The "User" model stores references to ObjectIds from the "Games" collection to as "Favorites".
+LaunchPad.gg uses MongoDB / Mongoose for persistence of data. The "User" model stores references to ObjectIds from the "Games" collection as "Favorites".
 The database uses the below schemas:
 
 ### Game Schema
