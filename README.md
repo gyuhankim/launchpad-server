@@ -1,45 +1,110 @@
-# Thinkful Backend Template
+# LaunchPad.gg Server
 
-A template for developing and deploying Node.js apps.
+## Table of Contents
+- [Introduction](#introduction)
+- [Tech Stack](#tech-stack)
+- [Database](#database)
+  - [Game Schema](#game-schema)
+  - [User Schema](#user-schema)
+- [Endpoints](#endpoints)
+  - [Games](#games)
+  - [Favorites](#favorites)
+  - [Users](#users)
 
-## Getting started
+## Introduction
+This is the server documentation for [LaunchPad.gg](https://mysterious-sands-19667.herokuapp.com/).
 
-### Setting up a project
+## Tech Stack
+* Node
+* Express
+* MongoDB
+* Mongoose
+* Morgan
+* Passport
+* BCryptJS
+* JSONWebToken
+* dotEnv
+* Axios
+* cron
+* Mocha
+* Chai
+* [IGDB API](https://igdb.github.io/api/)
 
-* Move into your projects directory: `cd ~/YOUR_PROJECTS_DIRECTORY`
-* Clone this repository: `git clone https://github.com/Thinkful-Ed/backend-template YOUR_PROJECT_NAME`
-* Move into the project directory: `cd YOUR_PROJECT_NAME`
-* Install the dependencies: `npm install`
-* Create a new repo on GitHub: https://github.com/new
-    * Make sure the "Initialize this repository with a README" option is left unchecked
-* Update the remote to point to your GitHub repository: `git remote set-url origin https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME`
+## Database
+LaunchPad.gg uses MongoDB / Mongoose for persistence of data. The "User" model stores references to ObjectIds from the "Games" collection to as "Favorites".
+The database uses the below schemas:
 
-### Working on the project
+### Game Schema
+```
+id: {type: Number, required: true},
+  name: {type: String, required: true},
+  summary: String,
+  first_release_date: Number,
+  release_dates: [
+    {
+      platform: Number,
+      category: Number,
+      human: String
+    }
+  ],
+  platforms: [Number],
+  cover: Object,
+  screenshots: [
+    {
+      url: String,
+    }
+  ],
+  videos: [
+    {
+      name: String,
+      video_id: String
+    }
+  ]
+}
+```
 
-* Move into the project directory: `cd ~/YOUR_PROJECTS_DIRECTORY/YOUR_PROJECT_NAME`
-* Run the development task: `npm start`
-    * Starts a server running at http://localhost:8080
-    * Automatically restarts when any of your files change
+### User Schema
+```
+firstName: {
+    type: String, 
+    required: true
+  },
+  lastName: {
+    type: String, 
+    required: true
+  },
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  games: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }]
+}
+```
 
-## Databases
+## Endpoints
+All requests and responses are in JSON format.
 
-By default, the template is configured to connect to a MongoDB database using Mongoose.  It can be changed to connect to a PostgreSQL database using Knex by replacing any imports of `db-mongoose.js` with imports of `db-knex.js`, and uncommenting the Postgres `DATABASE_URL` lines in `config.js`.
+### Games
+Action | Path |
+--- | --- |
+GET (all) | https://launchpad-server.herokuapp.com/games |
+GET (single) | https://launchpad-server.herokuapp.com/games/:id |
 
-## Deployment
+### Favorites
+Action | Path |
+--- | --- |
+GET | https://launchpad-server.herokuapp.com/favorites |
+POST | https://launchpad-server.herokuapp.com/favorites |
+DELETE | https://launchpad-server.herokuapp.com/favorites |
 
-Requires the [Heroku CLI client](https://devcenter.heroku.com/articles/heroku-command-line).
-
-### Setting up the project on Heroku
-
-* Move into the project directory: `cd ~/YOUR_PROJECTS_DIRECTORY/YOUR_PROJECT_NAME`
-* Create the Heroku app: `heroku create PROJECT_NAME`
-
-* If your backend connects to a database, you need to configure the database URL:
-    * For a MongoDB database: `heroku config:set DATABASE_URL=mongodb://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME`
-    * For a PostgreSQL database: `heroku config:set DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME`
-
-* If you are creating a full-stack app, you need to configure the client origin: `heroku config:set CLIENT_ORIGIN=https://www.YOUR_DEPLOYED_CLIENT.com`
-
-### Deploying to Heroku
-
-* Push your code to Heroku: `git push heroku master`
+### Users
+Action | Path |
+--- | --- |
+POST (register) | https://launchpad-server.herokuapp.com/register |
+POST (login) | https://launchpad-server.herokuapp.com/login |
+POST (refresh JWT) | https://launchpad-server.herokuapp.com/login/refresh |

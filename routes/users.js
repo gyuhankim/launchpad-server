@@ -22,6 +22,18 @@ router.get('/', (req, res, next) => {
 
 });
 
+// Get single user
+router.get('/getone', (req, res, next) => {
+
+  User.findOne()
+    .then(results => {
+      res.json(results);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 // Create new user
 router.post('/', (req, res, next) => {
 
